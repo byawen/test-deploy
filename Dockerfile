@@ -1,14 +1,17 @@
-# 使用官方轻量级 Python 镜像
+# 使用官方轻量镜像
 FROM python:3.9-slim
 
-# 设置容器内的当前工作目录
+# 设置工作目录
 WORKDIR /app
 
-# 将当前目录下的所有文件复制到容器的 /app 目录下
-COPY . /app
+# 先安装依赖，利用 Docker 缓存层优化构建速度
+RUN pip install --no-cache-dir flask
 
-# (可选) 如果你有依赖项，取消下面一行的注释
-# RUN pip install --no-cache-dir -r requirements.txt
+# 复制当前目录代码到容器
+COPY . .
 
-# 运行你的 Python 程序
-CMD ["python", "hello.py"]
+# 暴露服务端口（仅做声明）
+EXPOSE 5000
+
+# 启动 Flask 应用
+CMD ["python", "app.py"]
